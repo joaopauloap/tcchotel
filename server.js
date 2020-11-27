@@ -150,7 +150,7 @@ app.get('/nivel',function(req,res){
 
 
 app.get('/teste',function(req,res){
-	res.send('testeOk')
+	res.send('testeOK') //OK
 	console.log('/teste')
 })
 
