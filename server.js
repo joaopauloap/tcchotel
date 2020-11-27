@@ -9,7 +9,7 @@ var app = express()
 app.use(cors());
 app.use(express.json())
 
-app.use(express.static('web'))
+app.use(express.static(__dirname +'/web'))
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(bodyParser.json())
 
