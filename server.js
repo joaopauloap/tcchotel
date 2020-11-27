@@ -9,7 +9,7 @@ var app = express()
 app.use(cors());
 app.use(express.json())
 
-app.use(express.static(process.env.PWD +'/web'))
+app.use(express.static('/'))
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(bodyParser.json())
 
@@ -153,20 +153,6 @@ app.get('/teste',function(req,res){
 	res.send('joao')
 	console.log('/teste')
 })
-
-app.get('/', function(req,res){
-	res.sendFile('web/index.html')
-})
-
-
-
-
-
-
-
-
-
-
 
 app.get('*',function(req,res){
 	res.send('<center><h1>404</h1></center>')
