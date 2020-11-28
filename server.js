@@ -41,25 +41,22 @@ function funcHorario(){
 
 app.post('/register',function(req,res){
 
-	if(res){
+	let apt = req.body.apt
+	let nome = req.body.nome
+	let genero = req.body.genero
+	let idade = req.body.idade
+	let pcd = req.body.pcd
+	let entrada = req.body.entrada
+	let saida = req.body.saida
 
-		let apt = req.body.apt
-		let nome = req.body.nome
-		let genero = req.body.genero
-		let idade = req.body.idade
-		let pcd = req.body.pcd
-		let entrada = req.body.entrada
-		let saida = req.body.saida
+	var registrarHospede = new usersModel({ apt:apt, nome:nome, genero:genero, idade:idade, pcd:pcd, entrada:entrada, saida:saida })
 
-		var registrarHospede = new usersModel({ apt:apt, nome:nome, genero:genero, idade:idade, pcd:pcd, entrada:entrada, saida:saida })
+	let horario = funcHorario()
 
-		let horario = funcHorario()
-
-		registrarHospede.save(function(err, usersModel) {
-			if (err) return console.error(err)
-				console.log(horario + " - Novo Check-In")
-		})
-	}
+	registrarHospede.save(function(err, usersModel) {
+		if (err) return console.error(err)
+			console.log(horario + " - Novo Check-In")
+	})
 
 })
 
@@ -86,53 +83,51 @@ app.post('/carregarConfiguracoes',function(req,res){
 })
 
 app.post('/atualizarConf',function(req,res){
-	if(res){
-		let consumo = req.body.consumopp
-		let capacidade = req.body.capacidade
-		let nivel = req.body.nivel
+	
+	let consumo = req.body.consumopp
+	let capacidade = req.body.capacidade
+	let nivel = req.body.nivel
 
-		let horario = funcHorario()
+	let horario = funcHorario()
 
-		configuracoesModel.findOneAndUpdate({}, {consumo:consumo,capacidade:capacidade,nivel:nivel}, function(err, result) {
-			if (err) return console.error(err)
-				console.log(horario + " - Configuracoes Atualizadas!")
-		});
-	}
+	configuracoesModel.findOneAndUpdate({}, {consumo:consumo,capacidade:capacidade,nivel:nivel}, function(err, result) {
+		if (err) return console.error(err)
+			console.log(horario + " - Configuracoes Atualizadas!")
+	});
+	
 })
 
 app.post('/atualizarNivel',function(req,res){
-	if(res){
-		let nivel = req.body.nivel
-		configuracoesModel.findOneAndUpdate({}, {nivel:nivel}, function(err, result) {
-			if (err) return console.error(err)
-		});
+	
+	let horario = funcHorario()
+	let nivel = req.body.nivel
 
+	graficoModel({tempo:horario,nivel:nivel}).save(function(err, usersModel) {
+		if (err) return console.error(err)
+		console.log(horario + " - Nivel Registrado! " + nivel+" L")
+		res.send(horario + " - Nivel Registrado! " + nivel+" L")
+	})
+	
+	configuracoesModel.findOneAndUpdate({}, {nivel:nivel}, function(err, result) {	
+		if (err) return console.error(err)
+	});
 
-		let horario = funcHorario()
-
-		graficoModel({tempo:horario,nivel:nivel}).save(function(err, usersModel) {
-			if (err) return console.error(err)
-				console.log(horario + " - Nivel Registrado! " + nivel+" L")
-		})
-	}
 })
 
 app.post('/excluirHospede',function(req,res){
 
-	if(res){
-		let id = req.body.id
-		usersModel.findByIdAndDelete(id, function(err, result) {
-			if (err){
-				res.send('?')
-				return console.error(err)
-			}
-			if(result){
-				let horario = funcHorario()
-				console.log(horario + " - Hóspede "+id+" Excluido!")
-				res.send('Hospede Excluido!')
-			}
-		});
-	}
+	let id = req.body.id
+	usersModel.findByIdAndDelete(id, function(err, result) {
+		if (err){
+			res.send('?')
+			return console.error(err)
+		}
+		if(result){
+			let horario = funcHorario()
+			console.log(horario + " - Hóspede "+id+" Excluido!")
+			res.send('Hospede Excluido!')
+		}
+	});
 })
 
 
