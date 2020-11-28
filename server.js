@@ -145,7 +145,7 @@ app.get('/nivel',function(req,res){
 
 
 app.get('/teste',function(req,res){
-	res.send('joao')
+	res.send('tccHOTEL')
 	console.log('/teste')
 })
 
