@@ -17,6 +17,7 @@ app.use(bodyParser.json())
 var mongodbstr = 'mongodb+srv://joao:qwerty123@cluster0-i7dxf.gcp.mongodb.net/tcchotel?retryWrites=true&w=majority'
 var usersModel = mongoose.model('hospedes', {apt: Number, nome: String, genero: String, idade:Number, pcd: String, idade: Number, entrada: String, saida:String})	
 var configuracoesModel = mongoose.model('configuracoes', {consumo: Number, capacidade: Number, nivel: Number})	
+var registroNivel = mongoose.model('registroNivel', {tempo: String, nivel: Number})	
 var graficoModel = mongoose.model('nivel', {tempo: String, nivel: Number})	
 
 mongoose.connect(mongodbstr,{'useNewUrlParser': true,'useFindAndModify': false,'useCreateIndex': true,'useUnifiedTopology': true})
@@ -41,22 +42,25 @@ function funcHorario(){
 
 app.post('/register',function(req,res){
 
-	let apt = req.body.apt
-	let nome = req.body.nome
-	let genero = req.body.genero
-	let idade = req.body.idade
-	let pcd = req.body.pcd
-	let entrada = req.body.entrada
-	let saida = req.body.saida
+	if(res){
 
-	var registrarHospede = new usersModel({ apt:apt, nome:nome, genero:genero, idade:idade, pcd:pcd, entrada:entrada, saida:saida })
+		let apt = req.body.apt
+		let nome = req.body.nome
+		let genero = req.body.genero
+		let idade = req.body.idade
+		let pcd = req.body.pcd
+		let entrada = req.body.entrada
+		let saida = req.body.saida
 
-	let horario = funcHorario()
+		var registrarHospede = new usersModel({ apt:apt, nome:nome, genero:genero, idade:idade, pcd:pcd, entrada:entrada, saida:saida })
 
-	registrarHospede.save(function(err, usersModel) {
-		if (err) return console.error(err)
-			console.log(horario + " - Novo Check-In")
-	})
+		let horario = funcHorario()
+
+		registrarHospede.save(function(err, usersModel) {
+			if (err) return console.error(err)
+				console.log(horario + " - Novo Check-In")
+		})
+	}
 
 })
 
@@ -83,51 +87,59 @@ app.post('/carregarConfiguracoes',function(req,res){
 })
 
 app.post('/atualizarConf',function(req,res){
-	
-	let consumo = req.body.consumopp
-	let capacidade = req.body.capacidade
-	let nivel = req.body.nivel
+	if(res){
+		let consumo = req.body.consumopp
+		let capacidade = req.body.capacidade
+		let nivel = req.body.nivel
 
-	let horario = funcHorario()
+		let horario = funcHorario()
 
-	configuracoesModel.findOneAndUpdate({}, {consumo:consumo,capacidade:capacidade,nivel:nivel}, function(err, result) {
-		if (err) return console.error(err)
-			console.log(horario + " - Configuracoes Atualizadas!")
-	});
-	
+		configuracoesModel.findOneAndUpdate({}, {consumo:consumo,capacidade:capacidade,nivel:nivel}, function(err, result) {
+			if (err) return console.error(err)
+				console.log(horario + " - Configuracoes Atualizadas!")
+		});
+	}
 })
 
 app.post('/atualizarNivel',function(req,res){
-	
-	let horario = funcHorario()
-	let nivel = req.body.nivel
+	if(res){
+		let nivel = req.body.nivel
+		configuracoesModel.findOneAndUpdate({}, {nivel:nivel}, function(err, result) {
+			if (err) return console.error(err)
+		});
 
-	graficoModel({tempo:horario,nivel:nivel}).save(function(err, usersModel) {
-		if (err) return console.error(err)
-		console.log(horario + " - Nivel Registrado! " + nivel+" L")
-		res.send(horario + " - Nivel Registrado! " + nivel+" L")
-	})
-	
-	configuracoesModel.findOneAndUpdate({}, {nivel:nivel}, function(err, result) {	
-		if (err) return console.error(err)
-	});
 
+		let horario = funcHorario()
+
+		registroNivel({tempo:horario,nivel:nivel}).save(function(err, usersModel) {
+			if (err) return console.error(err)
+				console.log(horario + " - Nivel Registrado! " + nivel+" L")
+		})
+
+		graficoModel.deleteOne(function(err, result) {})
+		graficoModel({tempo:horario,nivel:nivel}).save(function(err, usersModel) {
+			if (err) return console.error(err)
+				console.log(horario + " - Nivel Registrado! " + nivel+" L")
+		})
+	}
 })
 
 app.post('/excluirHospede',function(req,res){
 
-	let id = req.body.id
-	usersModel.findByIdAndDelete(id, function(err, result) {
-		if (err){
-			res.send('?')
-			return console.error(err)
-		}
-		if(result){
-			let horario = funcHorario()
-			console.log(horario + " - Hóspede "+id+" Excluido!")
-			res.send('Hospede Excluido!')
-		}
-	});
+	if(res){
+		let id = req.body.id
+		usersModel.findByIdAndDelete(id, function(err, result) {
+			if (err){
+				res.send('?')
+				return console.error(err)
+			}
+			if(result){
+				let horario = funcHorario()
+				console.log(horario + " - Hóspede "+id+" Excluido!")
+				res.send('Hospede Excluido!')
+			}
+		});
+	}
 })
 
 
@@ -145,13 +157,11 @@ app.get('/nivel',function(req,res){
 
 
 app.get('/teste',function(req,res){
-	res.send('tccHOTEL')
+	res.send('teste OK')
 	console.log('/teste')
 })
+
 
 app.get('*',function(req,res){
 	res.send('<center><h1>404</h1></center>')
 })
-
-
-
