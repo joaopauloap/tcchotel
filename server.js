@@ -114,6 +114,7 @@ app.post('/atualizarNivel',function(req,res){
 		registroNivel({tempo:horario,nivel:nivel}).save(function(err, usersModel) {
 			if (err) return console.error(err)
 				console.log(horario + " - Nivel Registrado! " + nivel+" L")
+				res.send(horario + " - Nivel Registrado! " + nivel+" L")
 		})
 
 		graficoModel.deleteOne(function(err, result) {})
