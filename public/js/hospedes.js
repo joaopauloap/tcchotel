@@ -100,7 +100,7 @@ function atualizarHospede(id){
   let entrada = document.getElementById(id).childNodes[5].lastChild.value
   let saida = document.getElementById(id).childNodes[6].lastChild.value
 
-  axios.post(`https://tcchotel.herokuapp.com/atualizarHospede`,{apt:apt, nome:nome, genero:genero,idade:idade, pcd:pcd, entrada:entrada,saida:saida})
+  axios.post(`https://tcchotel.herokuapp.com/atualizarHospede`,{id:id,apt:apt, nome:nome, genero:genero,idade:idade, pcd:pcd, entrada:entrada,saida:saida})
   alert("Hóspede Atualizado!")  
 }
 

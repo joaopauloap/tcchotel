@@ -67,7 +67,9 @@ app.post('/register',function(req,res){
 app.post('/atualizarHospede',function(req,res){
 
 	if(res){
+		let horario = funcHorario()
 
+		let id = req.body.id
 		let apt = req.body.apt
 		let nome = req.body.nome
 		let genero = req.body.genero
@@ -76,6 +78,10 @@ app.post('/atualizarHospede',function(req,res){
 		let entrada = req.body.entrada
 		let saida = req.body.saida
 
+		usersModel.updateOne({id:id},{ apt:apt, nome:nome, genero:genero, idade:idade, pcd:pcd, entrada:entrada, saida:saida },function(err,res){
+			if (err) return console.error(err)
+			console.log(horario + " - Hospede " + id + " atualizado")
+		})
 		
 	}
 
@@ -132,7 +138,7 @@ app.post('/atualizarNivel',function(req,res){
 		registroNivel({tempo:horario,nivel:nivel}).save(function(err, usersModel) {
 			if (err) return console.error(err)
 				console.log(horario + " - Nivel Registrado! " + nivel+" L")
-				res.send(horario + " - Nivel Registrado! " + nivel+" L")
+			res.send(horario + " - Nivel Registrado! " + nivel+" L")
 		})
 
 		graficoModel.deleteOne(function(err, result) {})
