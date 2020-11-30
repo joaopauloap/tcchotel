@@ -96,5 +96,3 @@ function atualizarNivelAtual(){
   let convLevel = (nivel/capacidade)*100
   setLevel(convLevel)
 }
-
-
