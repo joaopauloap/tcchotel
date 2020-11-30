@@ -102,6 +102,7 @@ function atualizarHospede(id){
 
   axios.post(`https://tcchotel.herokuapp.com/atualizarHospede`,{id:id,apt:apt, nome:nome, genero:genero,idade:idade, pcd:pcd, entrada:entrada,saida:saida})
   alert("Hóspede Atualizado!")  
+  location.reload()
 }
 
 function editarHospede(id){

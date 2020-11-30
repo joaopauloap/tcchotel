@@ -78,7 +78,7 @@ app.post('/atualizarHospede',function(req,res){
 		let entrada = req.body.entrada
 		let saida = req.body.saida
 
-		usersModel.updateOne({id:id},{ apt:apt, nome:nome, genero:genero, idade:idade, pcd:pcd, entrada:entrada, saida:saida },function(err,res){
+		usersModel.updateOne({_id:id},{ apt:apt, nome:nome, genero:genero, idade:idade, pcd:pcd, entrada:entrada, saida:saida },function(err,res){
 			if (err) return console.error(err)
 			console.log(horario + " - Hospede " + id + " atualizado")
 		})
