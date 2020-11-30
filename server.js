@@ -64,6 +64,23 @@ app.post('/register',function(req,res){
 
 })
 
+app.post('/atualizarHospede',function(req,res){
+
+	if(res){
+
+		let apt = req.body.apt
+		let nome = req.body.nome
+		let genero = req.body.genero
+		let idade = req.body.idade
+		let pcd = req.body.pcd
+		let entrada = req.body.entrada
+		let saida = req.body.saida
+
+		
+	}
+
+})
+
 app.post('/listarHospedes',function(req,res){
 	usersModel.find({}, function(err, result) {
 		if (err) return console.error(err)
@@ -102,14 +119,15 @@ app.post('/atualizarConf',function(req,res){
 })
 
 app.post('/atualizarNivel',function(req,res){
+	
 	if(res){
+
+		let horario = funcHorario()
 		let nivel = req.body.nivel
+
 		configuracoesModel.findOneAndUpdate({}, {nivel:nivel}, function(err, result) {
 			if (err) return console.error(err)
 		});
-
-
-		let horario = funcHorario()
 
 		registroNivel({tempo:horario,nivel:nivel}).save(function(err, usersModel) {
 			if (err) return console.error(err)
